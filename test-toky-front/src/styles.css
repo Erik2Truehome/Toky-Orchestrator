@@ -1,0 +1,19 @@
+html,
+body {
+  margin: 10px;
+  background-color: var(--surface-b);
+  /* var(--surface-b); */
+  font-family: var(--font-family);
+}
+
+.text-layout {
+  color: var(--text-color);
+}
+
+.text-layout-secondary {
+  color: var(--text-color-secondary);
+}
+
+.padding {
+  padding: 10px;
+}

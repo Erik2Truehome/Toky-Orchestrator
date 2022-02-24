@@ -1,0 +1,80 @@
+<div class="p-2" [ngStyle]="{ backgroundColor: 'var(--teal-100)' }">
+  <!--Inicio de transferir a numero o IVR -->
+  <p-card header="Actions over Current Call">
+    <span class="p-input-icon-left p-float-label">
+      <i class="pi pi-phone"></i>
+      <input type="text" pInputText [(ngModel)]="transferringPhone" />
+      <label for="float-input">Transfer To phone</label>
+    </span>
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Transfer"
+      icon="pi pi-send"
+      iconPos="left"
+      (click)="tranferToNumber()"
+      class="p-button-warning p-button-raised p-button-rounded p-button-sm"
+    ></button>
+    <br />
+    <br />
+    <!-- Fin de transferir a numero o IVR -->
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Successful Transfer"
+      icon="pi pi-thumbs-up"
+      iconPos="left"
+      (click)="hangUpCurrentCall()"
+      class="p-button-success p-button-raised p-button-rounded p-button-sm"
+    ></button>
+
+    <!-- Inicio transferir a una cuenta de toky por su email -->
+    <br />
+    <br />
+    <span class="p-input-icon-left p-float-label">
+      <i class="pi pi-envelope"></i>
+      <input type="text" pInputText [(ngModel)]="transferringEmail" />
+      <label for="float-input">Transfer To Toky e-mail</label>
+    </span>
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Transfer"
+      icon="pi pi-send"
+      iconPos="left"
+      (click)="tranferToEmail()"
+      class="p-button-warning p-button-raised p-button-rounded p-button-sm"
+    ></button>
+    <br />
+    <hr />
+    <!-- Fin transferir a una cuenta de toky por su email -->
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Hang Up"
+      icon="pi pi-times"
+      iconPos="left"
+      (click)="hangUpCurrentCall()"
+      class="p-button-danger p-button-raised p-button-rounded p-button-sm"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Answer"
+      icon="pi pi-check"
+      iconPos="left"
+      (click)="AnswerInboundCall()"
+      class="p-button-success p-button-raised p-button-rounded p-button-sm"
+    ></button>
+  </p-card>
+</div>

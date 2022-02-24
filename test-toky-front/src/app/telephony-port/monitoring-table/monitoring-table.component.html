@@ -1,0 +1,214 @@
+<p-card header="Monitoring Ports">
+  <p-table
+    #dt1
+    [value]="ports"
+    selectionMode="single"
+    [(selection)]="selectedPort"
+    dataKey="id"
+    styleClass="p-datatable-customers"
+    [rows]="10"
+    [paginator]="true"
+    stateStorage="local"
+    stateKey="statedemo-local"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="idDatabase">
+          Id <p-sortIcon field="idDatabase"></p-sortIcon>
+        </th>
+        <th pSortableColumn="agentLinked.email">
+          e-mail Linked <p-sortIcon field="agentLinked.email"></p-sortIcon>
+        </th>
+        <th pSortableColumn="currentInfo.registrationStatus">
+          Registration Status
+          <p-sortIcon field="currentInfo.registrationStatus"></p-sortIcon>
+        </th>
+        <th pSortableColumn="country.name">
+          Country <p-sortIcon field="country.name"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="currentInfo.businessTarget.agentAssigned.email">
+          Profiler e-mail
+          <p-sortIcon
+            field="currentInfo.businessTarget.agentAssigned.email"
+          ></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="currentInfo.businessTarget.lead.telephone.number">
+          Lead Phone
+          <p-sortIcon
+            field="currentInfo.businessTarget.lead.telephone.number"
+          ></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="currentInfo.status">
+          Port Status <p-sortIcon field="currentInfo.status"></p-sortIcon>
+        </th>
+      </tr>
+
+      <!--Inicio de Filtros-->
+      <tr>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter($any($event.target)?.value, 'idDatabase', 'contains')
+            "
+            [value]="$any(dt1.filters['idDatabase'])?.value"
+            placeholder="Search Id"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter(
+                $any($event.target)?.value,
+                'agentLinked.email',
+                'contains'
+              )
+            "
+            [value]="$any(dt1.filters['agentLinked.email'])?.value"
+            placeholder="Search e-mail Linked"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter(
+                $any($event.target)?.value,
+                'currentInfo.registrationStatus',
+                'contains'
+              )
+            "
+            [value]="$any(dt1.filters['currentInfo.registrationStatus'])?.value"
+            placeholder="Search Registration Status"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter($any($event.target)?.value, 'country.name', 'contains')
+            "
+            [value]="$any(dt1.filters['country.name'])?.value"
+            placeholder="Search Country"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter(
+                $any($event.target)?.value,
+                'currentInfo.businessTarget.agentAssigned.email',
+                'contains'
+              )
+            "
+            [value]="
+              $any(
+                dt1.filters['currentInfo.businessTarget.agentAssigned.email']
+              )?.value
+            "
+            placeholder="Search Profiler email"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter(
+                $any($event.target)?.value,
+                'currentInfo.businessTarget.lead.telephone.number',
+                'contains'
+              )
+            "
+            [value]="
+              $any(
+                dt1.filters['currentInfo.businessTarget.lead.telephone.number']
+              )?.value
+            "
+            placeholder="Search Lead Phone"
+            class="p-column-filter"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="
+              dt1.filter(
+                $any($event.target)?.value,
+                'currentInfo.status',
+                'contains'
+              )
+            "
+            [value]="$any(dt1.filters['currentInfo.status'])?.value"
+            placeholder="Search Port Status"
+            class="p-column-filter"
+          />
+        </th>
+      </tr>
+      <!--fin de Filtros-->
+    </ng-template>
+    <!--Fin cabecera-->
+
+    <ng-template pTemplate="body" let-port>
+      <tr [pSelectableRow]="port">
+        <td>
+          <span class="p-column-title">Id</span>
+          {{ port.idDatabase }}
+        </td>
+        <td>
+          <span class="p-column-title">e-mail Linked</span>
+          {{ port.agentLinked.email }}
+        </td>
+        <td>
+          <span class="p-column-title">Registration Status</span>
+          <span
+            [class]="
+              'customer-badge status-' + port.currentInfo.registrationStatus
+            "
+            >{{ port.currentInfo.registrationStatus }}</span
+          >
+        </td>
+        <td>
+          <span class="p-column-title">Country</span>
+          <span class="image-text">{{ port.country.name }}</span>
+        </td>
+        <td>
+          <span class="p-column-title">Profiler e-mail</span>
+          {{ port.currentInfo.businessTarget.agentAssigned.email }}
+        </td>
+        <td>
+          <span class="p-column-title">Lead Phone</span>
+          {{ port.currentInfo.businessTarget.lead.telephone.number }}
+        </td>
+        <td>
+          <span class="p-column-title">Port Status</span>
+          <span [class]="'customer-badge status-' + port.currentInfo.status">{{
+            port.currentInfo.status
+          }}</span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No customers found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

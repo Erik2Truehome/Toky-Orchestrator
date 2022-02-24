@@ -1,0 +1,190 @@
+<div class="bg-primary-reverse">
+  <h1>Dial Engine</h1>
+</div>
+
+<div class="grid">
+  <div class="col-12 bg-blue-300 p-2">
+    <!--Panel Izquierdo-->
+    <app-monitoring-table></app-monitoring-table>
+  </div>
+
+  <!-- <br />
+  <div class="col-12 bg-blue-300 p-2">
+    <app-softphone-actions></app-softphone-actions>
+  </div>
+  <br /> -->
+
+  <div class="col-12 bg-blue-100 p-2">
+    <!--Panel Derecho-->
+    <p-card header="Assignator" subheader="Simulation">
+      <!--Inicio Option 3 orquestador-->
+      <p-card header="Option 3" subheader="Many phones at same time">
+        <div class="grid">
+          <div class="sm:col-12 m-1 p-1">
+            <p-card header="Leads">
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input
+                  type="text"
+                  pInputText
+                  [(ngModel)]="lead_numbers_opt_3"
+                />
+                <label for="float-input">Telephones</label>
+              </span>
+
+              <br />
+              <br />
+              <button
+                pButton
+                pRipple
+                type="button"
+                label="Many phones at same time"
+                icon="pi pi-send"
+                iconPos="left"
+                (click)="ReceiveManyPhones_Opt3()"
+                class="p-button-info p-button-raised p-button-rounded p-button-sm"
+              ></button>
+            </p-card>
+          </div>
+        </div>
+      </p-card>
+      <!--Fin Option 3 Orquestador-->
+      <br />
+      <br />
+
+      <!--Inicio Option 1 Direct Calls-->
+      <p-card header="Option 1" subheader="Direct Calls">
+        <div class="grid">
+          <div class="sm:col-12 m-1 p-1">
+            <p-card header="Lead 1">
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input type="text" pInputText [(ngModel)]="lead_number_opt_1" />
+                <label for="float-input">Lead's Telephone</label>
+              </span>
+
+              <br />
+              <br />
+              <button
+                pButton
+                pRipple
+                type="button"
+                label="Send Lead Direct Call"
+                icon="pi pi-send"
+                iconPos="left"
+                (click)="ReceiveLead_opt1()"
+                class="p-button-info p-button-raised p-button-rounded p-button-sm"
+              ></button>
+            </p-card>
+          </div>
+        </div>
+      </p-card>
+      <!--Fin Option 1 Direct Calls-->
+      <br />
+      <br />
+
+      <!--Inicio Option 2 Trasnfering IVR-->
+      <p-card header="Option 2" subheader="Transferring IVR">
+        <div class="grid">
+          <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-1">
+            <p-card header="Lead 1">
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input type="text" pInputText [(ngModel)]="lead_number_1" />
+                <label for="float-input">Lead's Telephone</label>
+              </span>
+
+              <br />
+              <br />
+              <br />
+
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input
+                  type="text"
+                  pInputText
+                  [(ngModel)]="ivr_agent_assigned_1"
+                />
+                <label for="float-input">Ivr of Profiler</label>
+              </span>
+
+              <br />
+              <br />
+
+              <button
+                pButton
+                pRipple
+                type="button"
+                label="Send Lead IVR"
+                icon="pi pi-send"
+                iconPos="left"
+                (click)="ReceiveLead1()"
+                class="p-button-info p-button-raised p-button-rounded p-button-sm"
+              ></button>
+            </p-card>
+          </div>
+          <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-1">
+            <p-card header="Lead 2">
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input type="text" pInputText [(ngModel)]="lead_number_2" />
+                <label for="float-input">Lead's Telephone</label>
+              </span>
+
+              <br />
+              <br />
+              <br />
+
+              <span class="p-input-icon-left p-float-label">
+                <i class="pi pi-phone"></i>
+                <input
+                  type="text"
+                  pInputText
+                  [(ngModel)]="ivr_agent_assigned_2"
+                />
+                <label for="float-input">Ivr of Profiler</label>
+              </span>
+
+              <br />
+              <br />
+
+              <button
+                pButton
+                pRipple
+                type="button"
+                label="Send Lead IVR"
+                icon="pi pi-send"
+                iconPos="left"
+                (click)="ReceiveLead2()"
+                class="p-button-info p-button-raised p-button-rounded p-button-sm"
+              ></button>
+            </p-card>
+          </div>
+          <div class="sm:col-12 md:col-12 lg:col-4 xl:col-4 p-1">
+            <p-card header="Send Many Leads at the same time">
+              <div class="grid">
+                <div class="col-8 col-offset-4 p-2">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Send Both Leads"
+                    icon="pi pi-send"
+                    iconPos="left"
+                    (click)="ReceiveBothLeads()"
+                    class="p-button-info p-button-raised p-button-rounded p-button-sm"
+                  ></button>
+                </div>
+              </div>
+            </p-card>
+          </div>
+        </div>
+      </p-card>
+      <!--Fin Option 2 Trasnfering IVR-->
+      <br />
+      <br />
+    </p-card>
+  </div>
+</div>
+
+<!-- <h5 class="text-layout-secondary">monitoring-page works!2</h5> -->
