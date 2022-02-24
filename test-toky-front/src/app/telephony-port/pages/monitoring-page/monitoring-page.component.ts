@@ -23,7 +23,7 @@ export class MonitoringPageComponent implements OnInit {
   //fin opcion 2
 
   //inicio opcion 3
-  public lead_numbers_opt_3: string = '5514837767'; //,5530396748,5959212310
+  public lead_numbers_opt_3: string = '5514837767,5530396748'; //5514837767,5530396748,5959212310
   //fin opcion 3
 
   constructor(private portService: PortService) {}

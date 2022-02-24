@@ -49,7 +49,7 @@ export abstract class CallAbstract implements ICallAbstract {
     const objToTransfer = {
       type: TransferEnum.NUMBER,
       destination: numberToTransfer,
-      option: typeTransfer, //or TransferOptionsEnum.WARM OR TransferOptionsEnum.BLIND
+      option: typeTransfer,
     };
     console.log('Transfieriendo a un numero Externo', objToTransfer);
 
@@ -60,19 +60,10 @@ export abstract class CallAbstract implements ICallAbstract {
     emailToTransfer: string,
     typeTransfer: TransferOptionsEnum
   ): void {
-    // eomc 3 no funciona la transferencia a una agente por email en espera de que me solucionen el inconveniente y ya les mande correo
-    /*
-      const objToTransfer = {
-        type: TransferEnum.AGENT, // TransferEnum.GROUP or TransferEnum.NUMBER or TransferEnum.AGENT
-        destination: 'https://toky.co/Truehome_mx/misael', //  'TEC_CDMX'          or '+525535243238'    or 'dessire.pena@truehome.com.mx' 'misael@truehome.com.mx'
-        option: TransferOptionsEnum.BLIND, //or TransferOptionsEnum.WARM OR TransferOptionsEnum.BLIND
-      };
-      */
-
     const objToTransfer = {
       type: TransferEnum.AGENT,
       destination: emailToTransfer,
-      option: typeTransfer, //or TransferOptionsEnum.WARM OR TransferOptionsEnum.BLIND
+      option: typeTransfer,
     };
     console.log(
       'Transfieriendo a un Agente de Toky por su email',

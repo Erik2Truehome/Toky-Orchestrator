@@ -18,7 +18,7 @@ export class CallTransfer
   public idPortMainCall: number;
 
   private _idMainCallToky: string;
-  private numberIVR: string = '+525585265166'; //Numero de TEC 525585262096
+  private numberIVR: string = '+525585262096'; //Numero de TEC
 
   constructor(
     ports: IPort[],

@@ -72,11 +72,11 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
       console.log(`#[${this.id}]-tokySession-${this.callType}-CONNECTED`);
       this.port!.currentInfo.status = PortStatus.CONNECTED;
       // 1)
-      //this.TransferToNumber(this.numberToXfer, TransferOptionsEnum.BLIND); //automaticamente lo mandamos al ivr. si funcionó pero pasan 5 segundos
+      this.TransferToNumber(this.numberToXfer, TransferOptionsEnum.BLIND); //automaticamente lo mandamos al ivr. si funcionó pero pasan 5 segundos
 
       //2)
       // this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.BLIND);//me fallo una vez //El lead tarda 1.5 segundos en escuchar a alguien es super rapido
-      this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.WARM); //el cliente tarda 4 segundos para escuhar a alguien
+      // this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.WARM); //el cliente tarda 4 segundos para escuhar a alguien
 
       //3
       //si no contesta nos permitirá enviarlo al ivr para que alguien en el ivr lo atienda

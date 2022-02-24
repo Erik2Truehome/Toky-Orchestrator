@@ -69,7 +69,7 @@ export class PortService {
           true, //true-> para poder recibir el invite de una inbound call or false
           true, //graba las llamadas
           mexico,
-          5
+          10
         );
 
       this.telephonyClients.push(telephonyClient1);
