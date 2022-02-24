@@ -131,14 +131,14 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
       );
       this.port!.currentInfo.status = PortStatus.TRANSFERRING;
       this.isWaitingTransfer = true;
-      setTimeout(() => {
+      /*setTimeout(() => {
         if (this.port!.currentInfo.status === PortStatus.TRANSFERRING) {
           console.log(
             'chale tuve que liberarlo a mano porque no recibi evento de BYE'
           );
           this.ClearAll();
         }
-      }, 3000);
+      }, 3000);*/
     });
     this.tokySession.on(SessionStatus.TRANSFER_WARM_INIT, () => {
       console.log(
