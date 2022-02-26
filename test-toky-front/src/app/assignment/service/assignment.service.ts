@@ -21,7 +21,7 @@ export class AssignmentService {
 
     try {
       this.MakeAssignation(
-        0,
+        1,
         '+52',
         '5530396748',
         'pedro.robles@outlook.com',
@@ -30,7 +30,7 @@ export class AssignmentService {
       );
 
       this.MakeAssignation(
-        1,
+        0,
         '+52',
         '5514837767',
         'rosa.martinez@outlook.com',
@@ -46,12 +46,12 @@ export class AssignmentService {
     try {
       this.createAgent(
         0,
-        'dessire.pena@truehome.com.mx',
+        'dessire.pena__truehome.com.mx',
         'Dessire',
         'Peñaflores'
       );
 
-      this.createAgent(1, 'misael@truehome.com.mx', 'Misael', 'Monteroca');
+      this.createAgent(1, 'misael__truehome.com.mx', 'Misael', 'Monteroca');
     } catch (e) {
       console.error('Error creating Agents');
     }

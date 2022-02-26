@@ -92,18 +92,17 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
             `Trying to Transfer Lead -> Name:[${businessTarget.lead.name}] Lastname[${businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}] to the Agent -> Name:[${businessTarget.agentAssigned.name}] Lastname[${businessTarget.agentAssigned.lastName}] email:[${businessTarget.agentAssigned.email}]`
           );
 
-          //el cliente tarda 4 segundos para escuhar a alguien
-          this.TransferToEmail(
+          //Falló varias veces, audio cruzado entre Leads, es decir, los leads se escuchaban entre sí. funcionó muy mal
+          /*this.TransferToEmail(
             businessTarget.agentAssigned.email,
             TransferOptionsEnum.WARM
-          );
+          );*/
 
-          /*
-          //me falló una vez //El lead tarda 1.5 segundos en escuchar a alguien.... es super rapido
+          //Si funcionó mejor se tarda mas o menos  2 o 3 segundos para hacer la transferencia del lead hacia su agente específico
           this.TransferToEmail(
             businessTarget.agentAssigned.email,
-            TransferOptionsEnum.blind
-          );*/
+            TransferOptionsEnum.BLIND
+          );
         } else {
           console.error(
             `No hay Agente asignado para el lead con numero ${this.tokySession._callData.phone}`
@@ -212,10 +211,9 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
     console.log(this.assignments);
 
     let businessTarget: BusinessTarget | undefined = this.assignments.find(
-      (item) => {
-        `${item.lead.telephone.areaCode}${item.lead.telephone.number}` ==
-          TokyPhoneRepresentation;
-      }
+      (item) =>
+        `${item.lead.telephone.areaCode}${item.lead.telephone.number}` ===
+        TokyPhoneRepresentation
     );
 
     return businessTarget;
