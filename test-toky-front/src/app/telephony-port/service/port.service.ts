@@ -56,6 +56,7 @@ export class PortService {
     };
 
     let agentLinkedPort: Agent = {
+      id: -1,
       email: this.agentIdEmail,
       name: 'Erik',
       lastName: 'Montes',

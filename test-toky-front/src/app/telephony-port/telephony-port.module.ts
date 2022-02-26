@@ -10,12 +10,19 @@ import { FormsModule } from '@angular/forms';
 import { MonitoringPageComponent } from './pages/monitoring-page/monitoring-page.component';
 import { MonitoringTableComponent } from './monitoring-table/monitoring-table.component';
 import { SoftphoneModule } from '../softphone/softphone.module';
+import { AssignmentModule } from '../assignment/assignment.module';
 
 //
 
 @NgModule({
   declarations: [MonitoringPageComponent, MonitoringTableComponent],
   exports: [MonitoringPageComponent],
-  imports: [CommonModule, FormsModule, PrimengModule, SoftphoneModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PrimengModule,
+    SoftphoneModule,
+    AssignmentModule,
+  ],
 })
 export class TelephonyPortModule {}

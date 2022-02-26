@@ -23,7 +23,7 @@ export abstract class CallAbstract implements ICallAbstract {
   protected port: IPort | null = null;
 
   protected numberToXfer = '+525585262096';
-  protected emailToXfer = 'misael__truehome.com.mx'; //'misael__truehome.com.mx' //'dessire.pena__truehome.com.mx'
+  //protected emailToXfer = 'misael__truehome.com.mx'; //'misael__truehome.com.mx' //'dessire.pena__truehome.com.mx'
 
   private _callType: string = '';
 

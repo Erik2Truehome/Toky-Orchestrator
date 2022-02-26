@@ -12,6 +12,7 @@ export interface Telephone {
 }
 
 export interface Agent {
+  id: number;
   email: string;
   name: string;
   lastName: string;
@@ -22,7 +23,7 @@ export interface Agent {
 export interface Lead {
   email: string;
   name: string;
-  lastName: string;
+  lastname: string;
   telephone: Telephone;
   image?: string;
 }

@@ -4,13 +4,16 @@ import {
   TransferOptionsEnum,
 } from 'src/app/toky-sdk/toky-sdk';
 import { ICall } from '../interfaces/ICall';
-import { IPort, PortStatus } from '../interfaces/IPort';
+import { IPort, PortStatus, Agent } from '../interfaces/IPort';
 import { CallAbstract } from '../classes/CallAbstract';
 import { ICallAbstract } from '../interfaces/ICallAbstract';
+import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
 
 export class Call extends CallAbstract implements ICall, ICallAbstract {
-  constructor(ports: IPort[], id: string) {
+  private assignments: BusinessTarget[];
+  constructor(ports: IPort[], id: string, assignments: BusinessTarget[]) {
     super(ports, id, 'call');
+    this.assignments = assignments;
   }
 
   public AddEventListenersCall(): void {
@@ -70,14 +73,49 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
 
     this.tokySession.on(SessionStatus.CONNECTED, () => {
       console.log(`#[${this.id}]-tokySession-${this.callType}-CONNECTED`);
-      this.port!.currentInfo.status = PortStatus.CONNECTED;
+      this.port!.currentInfo.status = PortStatus.CONNECTED; //de aqui sacamos el numero telefónico del lead realacioando esta instancia de la clase Call
       // 1)
-      this.TransferToNumber(this.numberToXfer, TransferOptionsEnum.BLIND); //automaticamente lo mandamos al ivr. si funcionó pero pasan 5 segundos
+      //this.TransferToNumber(this.numberToXfer, TransferOptionsEnum.BLIND); //automaticamente lo mandamos al ivr. si funcionó pero pasan 5 segundos
 
       //2)
       // this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.BLIND);//me fallo una vez //El lead tarda 1.5 segundos en escuchar a alguien es super rapido
       // this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.WARM); //el cliente tarda 4 segundos para escuhar a alguien
 
+      /************************************************************************************************************************** */
+      let businessTarget: BusinessTarget | undefined = this.findBusinessTarget(
+        this.tokySession._callData.phone
+      );
+
+      if (businessTarget) {
+        if (businessTarget.agentAssigned) {
+          console.warn(
+            `Trying to Transfer Lead -> Name:[${businessTarget.lead.name}] Lastname[${businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}] to the Agent -> Name:[${businessTarget.agentAssigned.name}] Lastname[${businessTarget.agentAssigned.lastName}] email:[${businessTarget.agentAssigned.email}]`
+          );
+
+          //el cliente tarda 4 segundos para escuhar a alguien
+          this.TransferToEmail(
+            businessTarget.agentAssigned.email,
+            TransferOptionsEnum.WARM
+          );
+
+          /*
+          //me falló una vez //El lead tarda 1.5 segundos en escuchar a alguien.... es super rapido
+          this.TransferToEmail(
+            businessTarget.agentAssigned.email,
+            TransferOptionsEnum.blind
+          );*/
+        } else {
+          console.error(
+            `No hay Agente asignado para el lead con numero ${this.tokySession._callData.phone}`
+          );
+        }
+      } else {
+        console.error(
+          `No se encontró businessTarget para el número del Lead [${this.tokySession._callData.phone}]`
+        );
+      }
+
+      /************************************************************************************************************************** */
       //3
       //si no contesta nos permitirá enviarlo al ivr para que alguien en el ivr lo atienda
       //pero no he logrado echarlo a andar
@@ -167,5 +205,19 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
         `#[${this.id}]-tokySession-${this.callType}-TRANSFER_WARM_NOT_COMPLETED`
       );
     });
+  }
+  private findBusinessTarget(
+    TokyPhoneRepresentation: string
+  ): BusinessTarget | undefined {
+    console.log(this.assignments);
+
+    let businessTarget: BusinessTarget | undefined = this.assignments.find(
+      (item) => {
+        `${item.lead.telephone.areaCode}${item.lead.telephone.number}` ==
+          TokyPhoneRepresentation;
+      }
+    );
+
+    return businessTarget;
   }
 }

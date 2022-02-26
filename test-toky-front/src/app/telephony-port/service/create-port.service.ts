@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AssignmentService } from 'src/app/assignment/service/assignment.service';
 import { Port } from '../classes/Port';
 import { TelephonyClient } from '../classes/TelephonyClient';
 import {
@@ -19,7 +20,10 @@ import { TokenService } from './token.service';
   providedIn: 'root',
 })
 export class CreatePortService {
-  constructor(private tokenService: TokenService) {}
+  constructor(
+    private tokenService: TokenService,
+    private assignmentService: AssignmentService
+  ) {}
 
   public async create(
     agentLinkedPort: Agent,
@@ -33,7 +37,8 @@ export class CreatePortService {
       let newTelephonyClient: ITelephonyClient = new TelephonyClient(
         1,
         agentLinkedPort,
-        country
+        country,
+        this.assignmentService.assignments //le paso las asignaciones
       );
 
       await newTelephonyClient.createItsTokyClient(

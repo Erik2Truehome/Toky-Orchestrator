@@ -13,6 +13,7 @@ import { Port } from './Port';
 import { CallTransfer } from './CallTransfer';
 import { ICallAbstract } from '../interfaces/ICallAbstract';
 import { TokyCallDirection } from './constant/TokyCallDirection';
+import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
 
 export class TelephonyClient implements ITelephonyClient {
   id: number;
@@ -21,10 +22,18 @@ export class TelephonyClient implements ITelephonyClient {
   country: Country;
   ports: IPort[] = [];
 
-  constructor(id: number, agentLinked: Agent, country: Country) {
+  private assignments: BusinessTarget[];
+
+  constructor(
+    id: number,
+    agentLinked: Agent,
+    country: Country,
+    assignments: BusinessTarget[]
+  ) {
     this.agentLinked = agentLinked;
     this.country = country;
     this.id = id;
+    this.assignments = assignments;
   }
 
   public async createItsTokyClient(
@@ -257,7 +266,12 @@ export class TelephonyClient implements ITelephonyClient {
                 'id de primera llamda tokySession._callId',
                 tokySession._callId
               );
-              call = new Call(this.ports, Math.random().toString()); //tokySession._callId aqui no logre sacar el idCall de toky
+              //aqui mero
+              call = new Call(
+                this.ports,
+                Math.random().toString(),
+                this.assignments
+              ); //tokySession._callId aqui no logre sacar el idCall de toky
 
               call.Configuration(port, tokySession);
               port.call = call;

@@ -37,11 +37,12 @@ export class Port implements IPort {
     let lead1: Lead = {
       email: '',
       name: 'Fernando',
-      lastName: 'Cervantes',
+      lastname: 'Cervantes',
       telephone: phoneLead1,
     };
 
     let agentAssigned1: Agent = {
+      id: -2,
       email: '',
       name: 'pedro',
       lastName: 'Peñaflores',
