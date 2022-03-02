@@ -14,10 +14,6 @@ export abstract class CallAbstract implements ICallAbstract {
     return this._callType;
   }
 
-  // protected set(value: string): void {
-  //   this._callType = value;
-  // }
-
   protected maxTimeRinging = 19000;
 
   protected port: IPort | null = null;
@@ -117,10 +113,6 @@ export abstract class CallAbstract implements ICallAbstract {
     destination: string;
     option: any;
   }) {
-    if (this.port?.portXfer) {
-      this.tokySession.makeTransfer(objToTransfer);
-    } else {
-      console.log('No hay puertos libres para transferencia');
-    }
+    this.tokySession.makeTransfer(objToTransfer);
   }
 }

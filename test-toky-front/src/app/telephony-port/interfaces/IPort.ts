@@ -67,8 +67,6 @@ export class PortStatus {
   public static CREATED = 'CREATED';
   public static INITIALIZING = 'INITIALIZING';
   public static READY = 'READY'; //Puerto lISTO para inciar una nueva marcacion
-  public static RESERVED = 'RESERVED';
-  public static RESERVED_TO_TRANSFER = 'RESERVED TO TRANSFER';
   public static STARTING_OUTBOUND_CALL = 'STARTING OUTBOUND CALL'; //En Toky es CONNECTING, cuando se inicia una llamada
   public static DIALING = 'DIALING'; // El numero destinatario (callee) empieza a sonar
 
@@ -108,7 +106,6 @@ export interface IPort {
   currentInfo: CurrentInfoPort;
   country: Country;
   call: ICall | null;
-  portXfer: IPort | null;
 
   //methods
   freePort(): void;

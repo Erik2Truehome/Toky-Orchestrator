@@ -43,14 +43,14 @@ export class AssignmentService {
         'Espinoza'
       );
 
-      /*this.MakeAssignation(
+      this.MakeAssignation(
         1,
         '+52',
         '5530396748',
         'pedro.robles@outlook.com',
         'Pedro',
         'Robles'
-      );*/
+      );
 
       this.MakeAssignation(
         0,

@@ -10,10 +10,7 @@ import { ITelephonyClient } from '../interfaces/ITelephonyClient';
 import { ClientStatus, TokyClient } from 'src/app/toky-sdk/toky-sdk';
 import { Call } from './Call';
 import { Port } from './Port';
-import { CallTransfer } from './CallTransfer';
 import { ICallAbstract } from '../interfaces/ICallAbstract';
-import { TokyCallDirection } from './constant/TokyCallDirection';
-import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
 import { IAssignment } from '../../assignment/interfaces/IAssignment';
 
 export class TelephonyClient implements ITelephonyClient {
@@ -24,6 +21,7 @@ export class TelephonyClient implements ITelephonyClient {
   ports: IPort[] = [];
 
   private assignments: IAssignment[];
+  private isTheFirstTime: boolean;
 
   constructor(
     id: number,
@@ -35,6 +33,7 @@ export class TelephonyClient implements ITelephonyClient {
     this.country = country;
     this.id = id;
     this.assignments = assignments;
+    this.isTheFirstTime = true;
   }
 
   public async createItsTokyClient(
@@ -130,9 +129,9 @@ export class TelephonyClient implements ITelephonyClient {
           (item.currentInfo.registrationStatus =
             PortRegistrationStatus.REGISTERED)
       );
-      this.ports.forEach(
+      /*this.ports.forEach(
         (item) => (item.currentInfo.status = PortStatus.READY)
-      );
+      );*/
     });
 
     this.tokyClient!.on(ClientStatus.OFFLINE, () => {
@@ -170,9 +169,10 @@ export class TelephonyClient implements ITelephonyClient {
           (item.currentInfo.registrationStatus =
             PortRegistrationStatus.REGISTERED)
       );
+      /*
       this.ports.forEach(
         (item) => (item.currentInfo.status = PortStatus.READY)
-      );
+      );*/
     });
 
     this.tokyClient!.on(ClientStatus.DISCONNECTED, () => {
@@ -194,9 +194,11 @@ export class TelephonyClient implements ITelephonyClient {
           (item.currentInfo.registrationStatus =
             PortRegistrationStatus.REGISTERED)
       );
-      this.ports.forEach(
-        (item) => (item.currentInfo.status = PortStatus.READY)
-      );
+
+      if (this.isTheFirstTime) {
+        this.putAllPortOnReady();
+        this.isTheFirstTime = false;
+      }
     });
 
     this.tokyClient!.on(ClientStatus.UNREGISTERED, () => {
@@ -212,72 +214,42 @@ export class TelephonyClient implements ITelephonyClient {
     });
 
     this.tokyClient!.on(ClientStatus.SESSION_UPDATED, (args) => {
-      //1
-      let tokySession: any;
+      const tokySession = args.session;
       let call: ICallAbstract;
       let port: IPort | undefined = undefined;
 
       console.log(`![${this.id}]-tokyClient-SESSION_UPDATED`);
-      tokySession = args.session;
+
       console.log('tokySession', tokySession);
 
       if (tokySession) {
-        if (
-          //preguntamos si es llamda de transfererencia a Agente o es una llamada de salida a la PSTN
-          tokySession._callDirection &&
-          tokySession._callDirection === TokyCallDirection.INBOUND
-        ) {
-          /*es una llamada de transferencia  a Agente*/
-          console.warn(
-            `![${this.id}]-tokyClient-SESSION_UPDATED-llamada de transferencia a Agente`
+        /*es una llamada de salida para un lead que  desea comprar una casa*/
+        console.warn(
+          `![${this.id}]-tokyClient-SESSION_UPDATED- llamada de salida a Lead`
+        );
+        port = this.ports.find(
+          (port) => port.currentInfo.status === PortStatus.READY
+        );
+        if (port) {
+          //si hay un puerto libre inicia la marcacion
+          port.currentInfo.status = PortStatus.STARTING_OUTBOUND_CALL;
+
+          console.log(
+            'id de primera llamda tokySession._callId',
+            tokySession._callId
           );
 
-          // buscamos por el phoneNumberLead
-          let portMainCall: IPort | undefined = this.ports.find(
-            (item) =>
-              item.call?.tokySession._callData.phone ===
-              tokySession._callData.uri
+          //creamos una instancia de una llamada en donde se manejarán los estados de solo esa llamada
+          call = new Call(
+            this.ports,
+            Math.random().toString(), //tokySession._callId aqui no logre sacar el idCall de toky por eso le puse un numero random
+            this.assignments
           );
 
-          if (portMainCall) {
-            const portXfer = portMainCall.portXfer;
-            call = new CallTransfer(
-              this.ports,
-              tokySession._callId,
-              portMainCall.idDatabase,
-              portMainCall.call?.tokySession._callId
-            );
-            call.Configuration(portXfer!, tokySession);
-            portXfer!.call = call;
-          }
+          call.Configuration(port, tokySession);
+          port.call = call;
         } else {
-          /*es una llamada de salida para un lead que  desea comprar una casa*/
-          console.warn(
-            `![${this.id}]-tokyClient-SESSION_UPDATED- llamada de salida a Lead`
-          );
-          port = this.ports.find(
-            (port) => port.currentInfo.status === PortStatus.READY
-          );
-          if (port) {
-            port.currentInfo.status = PortStatus.RESERVED;
-            const portToTransfer = this.reservePortToXfer();
-            if (portToTransfer) {
-              port.portXfer = portToTransfer;
-              console.log(
-                'id de primera llamda tokySession._callId',
-                tokySession._callId
-              );
-              //aqui mero
-              call = new Call(
-                this.ports,
-                Math.random().toString(),
-                this.assignments
-              ); //tokySession._callId aqui no logre sacar el idCall de toky
-
-              call.Configuration(port, tokySession);
-              port.call = call;
-            }
-          }
+          tokySession.endCall(); //si no hay puertos libres cancelamos la marcacion a el lead
         }
       } else {
         console.error('Error recibiendo la tokySesion');
@@ -294,29 +266,10 @@ export class TelephonyClient implements ITelephonyClient {
       //3
       console.log(`![${this.id}]-tokyClient-INVITE`);
       console.log('INVITE... se esta recibiendo una llamada');
-
-      //creo que esto ya no seria necesario
-      /*    TokyMedia.source.incomingRingAudio.play();
-      this.currentInfo.status = PortStatus.STARTING_INBOUND_CALL;
-      this.currentInfo.status = PortStatus.RINGING;
-    */
-
-      // setTimeout(() => {
-      //   if (this.tokySession) {
-      //     this.tokySession.acceptCall();
-      //   }
-      // }, 5000);//automaticamente contestamos
     });
   }
 
-  private reservePortToXfer(): IPort | undefined {
-    const port = this.ports.find(
-      (port) => port.currentInfo.status === PortStatus.READY
-    );
-
-    if (port) {
-      port.currentInfo.status = PortStatus.RESERVED_TO_TRANSFER;
-    }
-    return port;
+  private putAllPortOnReady() {
+    this.ports.forEach((item) => (item.currentInfo.status = PortStatus.READY));
   }
 }

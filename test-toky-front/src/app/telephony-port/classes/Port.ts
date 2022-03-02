@@ -18,14 +18,12 @@ export class Port implements IPort {
   currentInfo: CurrentInfoPort;
   country: Country;
   call: ICall | null = null;
-  portXfer: IPort | null;
 
   constructor(idDatabase: number, agentLinked: Agent, country: Country) {
     this.idDatabase = idDatabase;
     this.agentLinked = agentLinked;
     this.currentInfo = this.SetInfoDefault();
     this.country = country;
-    this.portXfer = null;
   }
 
   private SetInfoDefault(): CurrentInfoPort {
@@ -67,22 +65,9 @@ export class Port implements IPort {
     this.currentInfo.businessTarget!.lead.telephone.number = '';
     this.currentInfo.businessTarget!.agentAssigned.email = '';
     this.call = null;
-
-    if (this.portXfer) {
-      this.portXfer.freePort();
-      this.portXfer = null;
-    }
   }
 
   public configureAgentAssigned(emailAgent: string): void {
     this.currentInfo.businessTarget!.agentAssigned.email = emailAgent;
   }
-
-  /* public configureIvrOfAgentAssigned(ivrPhone: string): void {
-    this.IvrPhoneNumber = ivrPhone;
-  }
-
-  public configureOptionCallType(opt: OptionUI): void {
-    this.optionCallTypeUI = opt;
-  }*/
 }
