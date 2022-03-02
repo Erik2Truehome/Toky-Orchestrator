@@ -23,6 +23,24 @@ export class AssignmentService {
       this.MakeAssignation(
         1,
         '+52',
+        '5535243238',
+        'delfi.espinoza@outlook.com',
+        'Delfino',
+        'Espinoza'
+      );
+
+      this.MakeAssignation(
+        1,
+        '+52',
+        '5959212310',
+        'delfi.espinoza@outlook.com',
+        'Delfino',
+        'Espinoza'
+      );
+
+      this.MakeAssignation(
+        1,
+        '+52',
         '5530396748',
         'pedro.robles@outlook.com',
         'Pedro',
@@ -48,10 +66,17 @@ export class AssignmentService {
         0,
         'dessire.pena__truehome.com.mx',
         'Dessire',
-        'Peñaflores'
+        'Peñaflores',
+        '+525585262096'
       );
 
-      this.createAgent(1, 'misael__truehome.com.mx', 'Misael', 'Monteroca');
+      this.createAgent(
+        1,
+        'misael__truehome.com.mx',
+        'Misael',
+        'Monteroca',
+        '+525585262096'
+      );
     } catch (e) {
       console.error('Error creating Agents');
     }
@@ -61,13 +86,15 @@ export class AssignmentService {
     agentId: number,
     mail: string,
     name: string,
-    lastname: string
+    lastname: string,
+    ivrPhone: string
   ): void {
     const newAgent: Agent = {
       id: agentId,
       email: mail,
       name: name,
       lastName: lastname,
+      ivrPhone: ivrPhone,
     };
     this.agents.push(newAgent);
   }

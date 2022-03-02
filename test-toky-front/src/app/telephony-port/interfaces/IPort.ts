@@ -16,6 +16,7 @@ export interface Agent {
   email: string;
   name: string;
   lastName: string;
+  ivrPhone?: string;
   image?: string;
   telephoneForwarding?: Telephone;
 }

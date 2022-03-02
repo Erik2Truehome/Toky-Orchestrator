@@ -11,9 +11,11 @@ import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
 
 export class Call extends CallAbstract implements ICall, ICallAbstract {
   private assignments: BusinessTarget[];
+  private ivrDefault: string;
   constructor(ports: IPort[], id: string, assignments: BusinessTarget[]) {
     super(ports, id, 'call');
     this.assignments = assignments;
+    this.ivrDefault = '+525585262096';
   }
 
   public AddEventListenersCall(): void {
@@ -73,7 +75,7 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
 
     this.tokySession.on(SessionStatus.CONNECTED, () => {
       console.log(`#[${this.id}]-tokySession-${this.callType}-CONNECTED`);
-      this.port!.currentInfo.status = PortStatus.CONNECTED; //de aqui sacamos el numero telefónico del lead realacioando esta instancia de la clase Call
+      this.port!.currentInfo.status = PortStatus.CONNECTED;
       // 1)
       //this.TransferToNumber(this.numberToXfer, TransferOptionsEnum.BLIND); //automaticamente lo mandamos al ivr. si funcionó pero pasan 5 segundos
 
@@ -89,18 +91,11 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
       if (businessTarget) {
         if (businessTarget.agentAssigned) {
           console.warn(
-            `Trying to Transfer Lead -> Name:[${businessTarget.lead.name}] Lastname[${businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}] to the Agent -> Name:[${businessTarget.agentAssigned.name}] Lastname[${businessTarget.agentAssigned.lastName}] email:[${businessTarget.agentAssigned.email}]`
+            `Trying to Transfer Lead -> Name:[${businessTarget.lead.name}] Lastname[${businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}] to the Agent's IVR queue -> Name:[${businessTarget.agentAssigned.name}] Lastname[${businessTarget.agentAssigned.lastName}] email:[${businessTarget.agentAssigned.email}]`
           );
 
-          //Falló varias veces, audio cruzado entre Leads, es decir, los leads se escuchaban entre sí. funcionó muy mal
-          /*this.TransferToEmail(
-            businessTarget.agentAssigned.email,
-            TransferOptionsEnum.WARM
-          );*/
-
-          //Si funcionó mejor se tarda mas o menos  2 o 3 segundos para hacer la transferencia del lead hacia su agente específico
-          this.TransferToEmail(
-            businessTarget.agentAssigned.email,
+          this.TransferToNumber(
+            businessTarget.agentAssigned.ivrPhone || this.ivrDefault,
             TransferOptionsEnum.BLIND
           );
         } else {
@@ -110,7 +105,7 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
         }
       } else {
         console.error(
-          `No se encontró businessTarget para el número del Lead [${this.tokySession._callData.phone}]`
+          `No se encontró businessTarget para el número del Lead [${this.tokySession._callData.phone}]... transfierelo al ivr default`
         );
       }
 
@@ -208,7 +203,7 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
   private findBusinessTarget(
     TokyPhoneRepresentation: string
   ): BusinessTarget | undefined {
-    console.log(this.assignments);
+    console.log('Todas las Asignaciones', this.assignments);
 
     let businessTarget: BusinessTarget | undefined = this.assignments.find(
       (item) =>
