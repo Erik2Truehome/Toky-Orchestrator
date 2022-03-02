@@ -6,13 +6,18 @@ import {
   Lead,
   Agent,
 } from 'src/app/telephony-port/interfaces/IPort';
+import { IAssignment } from '../interfaces/IAssignment';
+import { Assignment } from '../classes/Assignment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssignmentService {
-  public assignments: BusinessTarget[];
+  public assignments: IAssignment[];
   public agents: Agent[];
+
+  private idAssignmentCount: number = 1;
+
   constructor() {
     this.assignments = [];
     this.agents = [];
@@ -23,10 +28,10 @@ export class AssignmentService {
       this.MakeAssignation(
         1,
         '+52',
-        '5535243238',
-        'delfi.espinoza@outlook.com',
-        'Delfino',
-        'Espinoza'
+        'numero a 10 digitos',
+        'clau.rodri@outlook.com',
+        'Claudia',
+        'Rodriguez'
       );
 
       this.MakeAssignation(
@@ -38,14 +43,14 @@ export class AssignmentService {
         'Espinoza'
       );
 
-      this.MakeAssignation(
+      /*this.MakeAssignation(
         1,
         '+52',
         '5530396748',
         'pedro.robles@outlook.com',
         'Pedro',
         'Robles'
-      );
+      );*/
 
       this.MakeAssignation(
         0,
@@ -64,7 +69,7 @@ export class AssignmentService {
     try {
       this.createAgent(
         0,
-        'dessire.pena__truehome.com.mx',
+        'dessire.pena@truehome.com.mx',
         'Dessire',
         'Peñaflores',
         '+525585262096'
@@ -72,7 +77,7 @@ export class AssignmentService {
 
       this.createAgent(
         1,
-        'misael__truehome.com.mx',
+        'misael@truehome.com.mx',
         'Misael',
         'Monteroca',
         '+525585262096'
@@ -131,11 +136,18 @@ export class AssignmentService {
     try {
       const previousLength = this.assignments.length;
 
-      if (this.assignments.push(businessTarget) !== previousLength + 1) {
+      const newAssignment = new Assignment(
+        this.idAssignmentCount.toString(),
+        businessTarget
+      );
+
+      if (this.assignments.push(newAssignment) !== previousLength + 1) {
         throw new Error(
           'Error agregando un businesTarget even not entryed in catch'
         );
       }
+
+      this.idAssignmentCount++;
     } catch (e) {
       throw new Error('Error agregando un bussinesTarget');
     }

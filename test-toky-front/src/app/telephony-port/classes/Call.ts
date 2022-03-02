@@ -8,11 +8,13 @@ import { IPort, PortStatus, Agent } from '../interfaces/IPort';
 import { CallAbstract } from '../classes/CallAbstract';
 import { ICallAbstract } from '../interfaces/ICallAbstract';
 import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
+import { IAssignment } from 'src/app/assignment/interfaces/IAssignment';
 
 export class Call extends CallAbstract implements ICall, ICallAbstract {
-  private assignments: BusinessTarget[];
+  private assignments: IAssignment[];
   private ivrDefault: string;
-  constructor(ports: IPort[], id: string, assignments: BusinessTarget[]) {
+
+  constructor(ports: IPort[], id: string, assignments: IAssignment[]) {
     super(ports, id, 'call');
     this.assignments = assignments;
     this.ivrDefault = '+525585262096';
@@ -84,18 +86,19 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
       // this.TransferToEmail(this.emailToXfer, TransferOptionsEnum.WARM); //el cliente tarda 4 segundos para escuhar a alguien
 
       /************************************************************************************************************************** */
-      let businessTarget: BusinessTarget | undefined = this.findBusinessTarget(
+      let assignment: IAssignment | undefined = this.findBusinessTarget(
         this.tokySession._callData.phone
       );
 
-      if (businessTarget) {
-        if (businessTarget.agentAssigned) {
-          console.warn(
-            `Trying to Transfer Lead -> Name:[${businessTarget.lead.name}] Lastname[${businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}] to the Agent's IVR queue -> Name:[${businessTarget.agentAssigned.name}] Lastname[${businessTarget.agentAssigned.lastName}] email:[${businessTarget.agentAssigned.email}]`
-          );
+      if (assignment && assignment.businessTarget) {
+        if (assignment.businessTarget.agentAssigned) {
+          const infoLead = `Name:[${assignment.businessTarget.lead.name}] Lastname[${assignment.businessTarget.lead.lastname}] phone:[${this.tokySession._callData.phone}]`;
+          const infoAgent = ` Name:[${assignment.businessTarget.agentAssigned.name}] Lastname[${assignment.businessTarget.agentAssigned.lastName}] email:[${assignment.businessTarget.agentAssigned.email}]`;
+          console.warn(`Trying to Transfer Lead -> ${infoLead}
+           to the Agent's IVR queue -> ${infoAgent}`);
 
           this.TransferToNumber(
-            businessTarget.agentAssigned.ivrPhone || this.ivrDefault,
+            assignment.businessTarget.agentAssigned.ivrPhone || this.ivrDefault,
             TransferOptionsEnum.BLIND
           );
         } else {
@@ -107,6 +110,7 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
         console.error(
           `No se encontró businessTarget para el número del Lead [${this.tokySession._callData.phone}]... transfierelo al ivr default`
         );
+        this.TransferToNumber(this.ivrDefault, TransferOptionsEnum.BLIND);
       }
 
       /************************************************************************************************************************** */
@@ -202,15 +206,15 @@ export class Call extends CallAbstract implements ICall, ICallAbstract {
   }
   private findBusinessTarget(
     TokyPhoneRepresentation: string
-  ): BusinessTarget | undefined {
+  ): IAssignment | undefined {
     console.log('Todas las Asignaciones', this.assignments);
 
-    let businessTarget: BusinessTarget | undefined = this.assignments.find(
+    let assignment: IAssignment | undefined = this.assignments.find(
       (item) =>
-        `${item.lead.telephone.areaCode}${item.lead.telephone.number}` ===
+        `${item.businessTarget.lead.telephone.areaCode}${item.businessTarget.lead.telephone.number}` ===
         TokyPhoneRepresentation
     );
 
-    return businessTarget;
+    return assignment;
   }
 }

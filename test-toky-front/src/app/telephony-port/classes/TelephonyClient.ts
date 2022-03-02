@@ -14,6 +14,7 @@ import { CallTransfer } from './CallTransfer';
 import { ICallAbstract } from '../interfaces/ICallAbstract';
 import { TokyCallDirection } from './constant/TokyCallDirection';
 import { BusinessTarget } from 'src/app/telephony-port/interfaces/IPort';
+import { IAssignment } from '../../assignment/interfaces/IAssignment';
 
 export class TelephonyClient implements ITelephonyClient {
   id: number;
@@ -22,13 +23,13 @@ export class TelephonyClient implements ITelephonyClient {
   country: Country;
   ports: IPort[] = [];
 
-  private assignments: BusinessTarget[];
+  private assignments: IAssignment[];
 
   constructor(
     id: number,
     agentLinked: Agent,
     country: Country,
-    assignments: BusinessTarget[]
+    assignments: IAssignment[]
   ) {
     this.agentLinked = agentLinked;
     this.country = country;
@@ -250,7 +251,7 @@ export class TelephonyClient implements ITelephonyClient {
             portXfer!.call = call;
           }
         } else {
-          /*es una llamada de salida para un lead que  desea comprar una casas*/
+          /*es una llamada de salida para un lead que  desea comprar una casa*/
           console.warn(
             `![${this.id}]-tokyClient-SESSION_UPDATED- llamada de salida a Lead`
           );
